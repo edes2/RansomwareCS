@@ -69,5 +69,15 @@ namespace RansomForm.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] publickey {
+            get {
+                object obj = ResourceManager.GetObject("publickey", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
