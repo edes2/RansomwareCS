@@ -149,7 +149,7 @@ namespace RansomForm
         if (f.Contains(ENCRYPTED_FILE_EXTENSION))
         {
           Console.Out.WriteLine("Decrypting: " + f);
-          decryptFile(f, RSA);
+          decryptFile(f);
         }
       }
       foreach (string f in Directory.GetDirectories(path))
@@ -158,7 +158,7 @@ namespace RansomForm
       }
     }
 
-    void decryptFile(string path, RSACryptoServiceProvider RSA)
+    void decryptFile(string path)
     {
       try
       {
